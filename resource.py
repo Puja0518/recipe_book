@@ -1,10 +1,9 @@
 from flask_restful import Resource, Api, request
 import uuid
+import random
 from random import *
 import datetime
-from models import db, Users
-
-
+from models import db, Users, Post, Comments, Like
 
 class Database():
 
@@ -35,7 +34,9 @@ class UserRegistration(Resource):
         rec = Users(email= data["email"],
                     username=data["username"],
                     password=data["password"],
-                    contact=data["contact"]
+                    contact=data["contact"],
+                    address=data["address"],
+                    created_date=datetime.datetime.now()
                     )
         db.session.add(rec)
         db.session.commit()
@@ -60,3 +61,109 @@ class UserLogin(Resource):
                          "code: 400"}
         else :
             return { "message": "User not found"}
+class ForgotPass(Resource):
+    def post(self):
+        data = request.get_json()
+        print("password====", data)
+
+        rec = db.session.query(Users).filter(Users.email == data["email"]).first()
+        if rec:
+            rec.password = data["new_password"]
+            db.session.commit()
+            return { "message": "Password updated succesfully!!"}
+        else:
+            return { "message": "User doesnot exist"}
+
+class UpdateUser(Resource):
+    def post(self):
+        data = request.get_json()
+        print("updated data", data)
+
+        rec = db.session.query(Users).filter(Users.email == data["email"]).first()
+        if rec:
+            rec.contact_number = data["contact"]
+            rec.address = data["address"]
+            db.session.commit()
+            return { "message": "Profile has been updated successfully!!!"}
+        else:
+            return{ "message": "User does not exist"}
+
+def GenerateId():
+    id_ = randint(10000,10000000)
+    print("id  --- " , id_)
+    return id_
+
+class Recipe_Post(Resource):
+    def post(self):
+        data = request.get_json()
+        print("post data", data)
+        data["post_id"] = GenerateId()
+        post_rec = db.session.query(Post).filter(Post.post_id == data["post_id"]).first()
+        if post_rec:
+            data["post_id"] = GenerateId()
+        
+        rec = Post( post_id = data["post_id"],
+                    user_id = data["user_id"],
+                    description = data["description"],
+                    ingrident = data["ingrident"],
+                    procedure = data["procedure"],
+                    file_name = data["file_name"],
+                    created_date=datetime.datetime.now())
+        db.session.add(rec)
+        db.session.commit()
+        #--------
+        return { "message": "User Successfully Posted!!",
+                "code": 200}
+
+        
+class GetId(Resource):
+    def get(self):
+        idx = GenerateId()
+        return idx
+
+
+class Comment(Resource):
+    def post(self):
+        data = request.get_json()
+        print("comment data", data)
+        data["comment_id"] = GenerateId()
+        comment_rec = db.session.query(Comments).filter(Comments.comment_id == data["comment_id"]).first()
+        if comment_rec:
+            data["comment_id"] = GenerateId()
+        
+        rec = Comments( comment_id = data["comment_id"],
+                        user_id = data["user_id"],
+                        post_id = data["post_id"],
+                        comment = data["comment"],
+                        created_date=datetime.datetime.now())
+        db.session.add(rec)
+        db.session.commit()
+        #--------
+        return { "message": "User has been commented!!",
+                "code": 200}
+
+        
+class GetCommentId(Resource):
+    def get(self):
+        idx = GenerateId()
+        return idx
+
+class LikeIt(Resource):
+    def post(self):
+        data = request.get_json()
+        print("like data", data)
+     
+        rec = Like( object_id = data["object_id"],
+                    user_id = data["user_id"],
+                    like_date=datetime.datetime.now())
+        db.session.add(rec)
+        db.session.commit()
+        #--------
+        return { "message": "Liked the post/comment {}".format(data["object_id"]),
+                 "code": 200}
+
+class GetLike(Resource):
+    def get(self):
+        data = dict(request.args)
+        count = db.session.query(Like).filter(Like.object_id == data["object_id"]).count()
+        return {"message": "{} has {} likes".format(data["object_id"],count)}
