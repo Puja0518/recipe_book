@@ -23,6 +23,8 @@ api.add_resource(resource.Recipe_Post,"/post")
 api.add_resource(resource.Comment,"/comment")
 api.add_resource(resource.LikeIt,"/like")
 api.add_resource(resource.GetLike, "/get_like")
+api.add_resource(resource.Subscribe, "/follow")
+api.add_resource(resource.Favourite,"/favourite")
 
 if  __name__ == '__main__':
      app.run(port=9000,debug=True)

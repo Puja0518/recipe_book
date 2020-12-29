@@ -101,3 +101,61 @@ class Like(db.Model):
     def __repr__(self):
         return '<id {}>'.format(self.id)
 
+class Follow(db.Model):
+    __tablename__="follow"
+    id = db.Column(db.Integer,primary_key=True)
+    following = db.Column(db.Integer,db.ForeignKey("users.id"),nullable=False)
+    follower = db.Column(db.Integer,db.ForeignKey("users.id"),nullable=False)
+    follow_date = db.Column(db.DateTime())
+
+    def __init__(self, following, follower, follow_date):
+        self.follower = follower
+        self.following = following
+        self.follow_date = follow_date
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+class Favourite(db.Model):
+    __tablename__="favourite"
+    id = db.Column(db.Integer,primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"),nullable=False)
+    post_id = db.Column(db.Integer,db.ForeignKey("post.post_id"),nullable=False)
+    created_date = db.Column(db.DateTime())
+
+    def __init__(self, user_id, post_id, created_date):
+        self.user_id = user_id
+        self.post_id = post_id
+        self.created_date = created_date
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+class Food(db.Model):
+    __tablename__="food"
+    id = db.Column(db.Integer,primary_key=True)
+    country = db.Column(db.String())
+    state = db.Column(db.String())
+    zone = db.Column(db.String())
+    dishes = db.Column(db.String())
+    rating = db.Column(db.Integer)
+    file_name = db.Column(db.String())
+    created_date = db.Column(db.DateTime())
+
+    def __init__(self, country, state, zone, dishes, rating, file_name, created_date):
+        self.country = country
+        self.state = state
+        self.zone = zone
+        self.dishes = dishes
+        self.rating = rating
+        self.file_name = file_name
+        self.created_date = created_date
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id) 
+
+
+
+
+
+

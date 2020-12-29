@@ -3,7 +3,7 @@ import uuid
 import random
 from random import *
 import datetime
-from models import db, Users, Post, Comments, Like
+from models import db, Users, Post, Comments, Like, Follow, Favourite
 
 class Database():
 
@@ -167,3 +167,30 @@ class GetLike(Resource):
         data = dict(request.args)
         count = db.session.query(Like).filter(Like.object_id == data["object_id"]).count()
         return {"message": "{} has {} likes".format(data["object_id"],count)}
+
+class Subscribe(Resource):
+    def post(self):
+        data = request.get_json()
+        print("follow data",data)
+
+        rec = Follow(following = data["following"],
+                     follower = data["follower"],
+                     follow_date = datetime.datetime.now())
+        db.session.add(rec)
+        db.session.commit()
+
+        return { "message": "{} is now following to {}".format(data["following"],data["follower"])}
+
+class Favourite(Resource):
+    def post(self):
+        data = request.get_json()
+        print("data:",data) 
+
+        rec = Favourite(user_id = data["user_id"],
+                        post_id = data["post_id"],
+                        created_date = datetime.datetime.now())
+        db.session.add(rec)
+        db.session.commit()
+
+        return { "message": "{} is your favourite post".format(data["post_id"]),
+                "code": 200}
