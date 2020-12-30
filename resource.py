@@ -213,7 +213,6 @@ class Search(Resource):
             filter_list = []
             for filter_key in cols_to_search:
                 search_attribute = getattr(Food,filter_key)
-                #print("----------->>>",filter_key)
                 filter_list.append(search_attribute.ilike("%" + search_query))
 
             orm_query = orm_query.filter(or_(*filter_list))
