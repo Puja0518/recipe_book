@@ -25,6 +25,11 @@ api.add_resource(resource.LikeIt,"/like")
 api.add_resource(resource.GetLike, "/get_like")
 api.add_resource(resource.Subscribe, "/follow")
 api.add_resource(resource.Favourite,"/favourite")
+api.add_resource(resource.Search,"/search")
+api.add_resource(resource.DishesType,"/dishes_type")
+api.add_resource(resource.StateList,"/state_list")
+api.add_resource(resource.ZoneList,"/zone_list")
+
 
 if  __name__ == '__main__':
      app.run(port=9000,debug=True)

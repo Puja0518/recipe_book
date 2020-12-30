@@ -3,8 +3,8 @@ import uuid
 import random
 from random import *
 import datetime
-from models import db, Users, Post, Comments, Like, Follow, Favourite
-
+from models import db, Users, Post, Comments, Like, Follow, Favourite, Food
+from sqlalchemy import or_
 class Database():
 
     def __init__(self):
@@ -194,3 +194,64 @@ class Favourite(Resource):
 
         return { "message": "{} is your favourite post".format(data["post_id"]),
                 "code": 200}
+
+class Search(Resource):
+    def post(self):
+        data = request.get_json()
+        search_word = data["search"]
+        orm_query = db.session.query(Food)
+        if "search" in data.keys():
+            #print("----------- i am here !!!!!-----------")
+            key = "search"
+            search_query = data.get(key)
+            cols_to_search = [
+                "country",
+                "state",
+                "zone",
+                "dishes"
+            ]
+            filter_list = []
+            for filter_key in cols_to_search:
+                search_attribute = getattr(Food,filter_key)
+                #print("----------->>>",filter_key)
+                filter_list.append(search_attribute.ilike("%" + search_query))
+
+            orm_query = orm_query.filter(or_(*filter_list))
+        db_obj = Database()
+        # tmp = []
+        # for row in orm_query:
+        #     rec = db_obj.row2dict(row)
+        #     tmp.append(rec)
+        # return tmp
+        return ([db_obj.row2dict(row) for row in orm_query])
+
+
+class DishesType(Resource):
+    def get(self):
+        dishes = db.session.query(Food.dishes).all()
+        result = []
+        for dt in dishes:
+            result.append(dt[0]) 
+        return {"message": "List of Dishes",
+                "data": result}
+class StateList(Resource):
+    def get(self):
+        states = db.session.query(Food.state).all()
+        result = []
+        for st in states:
+            result.append(st[0])
+        return {"message": "List of states",
+                "data":list(set(result))}
+
+class ZoneList(Resource):
+    def get(self):
+        zones = db.session.query(Food.zone).all()
+        result = []
+        for zn in zones:
+            result.append(zn[0])
+        return {"message": "List of zone",
+                "data":list(set(result))}
+
+
+
+
