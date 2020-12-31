@@ -2,8 +2,12 @@
 
 from flask import Flask
 from flask_restful import Api
+import os
+
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = "{}/uploads".format(os.getcwd())
+
 api = Api(app)
 
 #------- JWT -------
@@ -29,6 +33,8 @@ api.add_resource(resource.Search,"/search")
 api.add_resource(resource.DishesType,"/dishes_type")
 api.add_resource(resource.StateList,"/state_list")
 api.add_resource(resource.ZoneList,"/zone_list")
+api.add_resource(resource.TopRecipe,"/top_recipe")
+api.add_resource(resource.Upload,"/upload")
 
 
 if  __name__ == '__main__':

@@ -15,18 +15,18 @@ cur = conn.cursor()
 # conn.close()
 
 country = ['IND']
-food = [['KA','South',['Dosa','Rasam','Pongal']], 
-         ['TA','South',['Rasam','']],
-         ['JHD','East',['Malpua','Dhuska','Litti Chokha']],
-         ['WB','East',['Fish','Rosogullas','Sondesh']],
-         ['Rajasthan','North',['Dal baati churma','Gatte ki subzi','Ker sangri']],
-         ['Panjab','North',['Butter Chicken','Chole Bhature','Makkey Di Roti']],
-         ['Gujarat','West',['Dhokla','Khandvi','Thepla']],
-         ['Maharashtra','West',['Puran Poli','Vada Paw']]
-         ]
+food = [ ['AP','South',['Punugulu','Gutti Vankaya Kura','Kodi Pulao']], 
+         ['kerala','South',['Puttu','Appam','Idiyappam','Banana Halwa']],
+         ['Odisha','East',['Khicede','Dalma','Pakhala Bhata','Chhena Poda']],
+         ['Bihar','East',['Chandrakala/ Pedakiya','Khaja','Reshmi Kebabs','Mutton Kebabs','Dal Peetha','Thekua']],
+         ['J&K','North',['Rogan Josh','Kachaloo Chaat','Kaladi Kulcha','Kashmiri Polao','Seekh Kebab']],
+         ['UP','North',['Boti Kabab','Chilla','Chicken Biryani']],
+         ['Delhi','North',['Paranthas','Golgappe','Rabri Faluda','Bhel Puri','Pav Bhaji','Dabeli','Momos']],
+         ['Goa','West',['Goan Fish Curry','Chicken Cafreal','Sorak','Samarachi Kodi']]
+        ]
 
 
-i = 2
+i = 24
 for con in country:
         for fd in food:
             print(fd)

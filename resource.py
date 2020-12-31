@@ -5,6 +5,9 @@ from random import *
 import datetime
 from models import db, Users, Post, Comments, Like, Follow, Favourite, Food
 from sqlalchemy import or_
+from werkzeug.utils import secure_filename
+import os
+
 class Database():
 
     def __init__(self):
@@ -251,6 +254,31 @@ class ZoneList(Resource):
         return {"message": "List of zone",
                 "data":list(set(result))}
 
+class TopRecipe(Resource):
+    def get(self):
+        top = db.session.query(Food).filter(Food.rating > 4).all()
+        db_obj = Database()
+        result = []
+        for row in top:
+            rec = db_obj.row2dict(row)
+            result.append(rec)
+        return result
 
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+class Upload(Resource):
+    def post(self):
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            # From flask uploading tutorial
+            filename = secure_filename(file.filename)
+            file.save("{}/uploads/{}".format(os.getcwd(), filename))
+            return {"message": "uploaded successfully!! "}
+        else:
+            # return error
+            return {'False'}
 
 
