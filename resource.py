@@ -60,10 +60,10 @@ class UserLogin(Resource):
                          "code": 200}
 
             else : 
-                return { "message": "Incorrect password!!!"
-                         "code: 400"}
+                return { "message": "Incorrect password!!!",
+                         "code": 400}
         else :
-            return { "message": "User not found"}
+            return { "message": "User not found", "code": 400}
 class ForgotPass(Resource):
     def post(self):
         data = request.get_json()
